@@ -1,0 +1,77 @@
+# 图片元数据（可选，供 image_pool 用）。mood/tags 留空待以后按情绪挑图时补充。
+images:
+  - file: 亚津子.png
+    character: 亚津子
+    series: Blue Archive
+    mood: ""
+    tags: []
+  - file: 伊吕波.png
+    character: 伊吕波
+    series: Blue Archive
+    mood: ""
+    tags: []
+  - file: 伊织.png
+    character: 伊织
+    series: Blue Archive
+    mood: ""
+    tags: []
+  - file: 优香.jpg
+    character: 优香
+    series: Blue Archive
+    mood: ""
+    tags: []
+  - file: 佳代子.jpg
+    character: 佳代子
+    series: Blue Archive
+    mood: ""
+    tags: []
+  - file: 响.png
+    character: 响
+    series: Blue Archive
+    mood: ""
+    tags: []
+  - file: 小桃.jpg
+    character: 小桃
+    series: Blue Archive
+    mood: ""
+    tags: []
+  - file: 日奈.jpg
+    character: 日奈
+    series: Blue Archive
+    mood: ""
+    tags: []
+  - file: 明日奈.jpg
+    character: 明日奈
+    series: Blue Archive
+    mood: ""
+    tags: []
+  - file: 普拉娜.jpg
+    character: 普拉娜
+    series: Blue Archive
+    mood: ""
+    tags: []
+  - file: 爱丽丝.jpg
+    character: 爱丽丝
+    series: Blue Archive
+    mood: ""
+    tags: []
+  - file: 白子.jpg
+    character: 白子
+    series: Blue Archive
+    mood: ""
+    tags: []
+  - file: 美游.png
+    character: 美游
+    series: Blue Archive
+    mood: ""
+    tags: []
+  - file: 莉音.jpg
+    character: 莉音
+    series: Blue Archive
+    mood: ""
+    tags: []
+  - file: 黑子.jpg
+    character: 黑子
+    series: Blue Archive
+    mood: ""
+    tags: []

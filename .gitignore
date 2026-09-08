@@ -1,0 +1,53 @@
+# ================= Python =================
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.idea/
+.vscode/
+.pytest_cache/
+*.egg-info/
+
+# ================= 密钥与运行时数据（勿提交） =================
+.env
+.env.prod
+*.local.json
+# 记忆库（SQLite）：每句话都在变，且含群友隐私
+qq-bot/data/
+
+# ================= NapCatQQ 运行时（第三方框架，含登录态，勿提交） =================
+# 运行时二进制与脚本
+node.exe
+wrapper.node
+*.dll
+index.js
+package.json
+package-lock.json
+napcat.bat
+# NapCat 版本配置（注意：bot 配置是 qq-bot/config.yaml，不在此列）
+config.json
+# NapCat 框架目录（含 QQ 登录态 / token / passkey）
+napcat/
+napcat.shell.windows.onekey/
+win64/
+# 朋友给的插件压缩包（源码已并入 qq-bot/src/plugins/dice）
+dice.zip
+
+# ================= 游戏原始语料（版权 + 成人内容，勿提交） =================
+# 只保留蒸馏产物：corpus/persona/*.yaml、corpus/fewshot.jsonl、corpus/eval/
+corpus/extracted/
+corpus/extracted_adult/
+corpus/extracted_allage/
+corpus/raw/
+corpus/tools/
+corpus/_t.psb
+corpus/adult_index.json
+corpus/dialogue_all.jsonl
+corpus/nene_context.jsonl
+corpus/nene_lines.jsonl
+corpus/nene_lines_clean.jsonl
+corpus/scenes.jsonl
+corpus/scenes_tagged.jsonl
+
+# ================= 本机工具配置 =================
+.claude/

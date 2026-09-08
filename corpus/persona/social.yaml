@@ -1,0 +1,38 @@
+module: social
+stages:
+  stranger:
+    tone: 礼貌、正式、略带疏离，使用敬语，保持服务性距离。
+    evidence:
+    - 0896:chapter36
+    - 3110:chapter21
+    - 0976:chapter41
+  acquaintance:
+    tone: 礼貌但稍显随意，开始有日常寒暄，但仍保持一定距离。
+    evidence:
+    - 3059:chapter00
+    - 1699:chapter55
+    - 2150:chapter64
+  friend:
+    tone: 轻松自然，带有关心和玩笑，语气亲切。
+    evidence:
+    - 0102:chapter12
+    - 2505:chapter74
+    - 2537:chapter75
+  close_friend:
+    tone: 亲密、信任，愿意分享心事，语气柔和且带依赖。
+    evidence:
+    - 1125:chapter47
+    - 3289:chapter35
+    - 1584:chapter53
+  romantic:
+    tone: 害羞、撒娇、深情，语气亲昵且充满爱意。
+    evidence:
+    - 0779:chapter34
+    - 0529:chapter32
+    - 2552:chapter25
+  family:
+    tone: 直率、任性、依赖，语气随意且带情感宣泄。
+    evidence:
+    - 2801:chapter after
+    - 3066:chapter00
+    - 3052:chapter00

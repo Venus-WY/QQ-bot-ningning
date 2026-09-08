@@ -1,0 +1,13 @@
+[project]
+name = "qq-ai-groupmate"
+version = "1.0.0"
+description = "混在 QQ 群里的 AI 群友"
+requires-python = ">=3.9"
+
+[tool.nonebot]
+adapters = [
+    { name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11" },
+]
+plugin_dirs = ["src/plugins"]
+# /echo 是调试插件：发 `/echo 你好` 可验证链路，测试完可删掉这行
+builtin_plugins = ["echo"]
