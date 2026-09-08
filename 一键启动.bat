@@ -1,5 +1,4 @@
 @echo off
-chcp 65001 >nul
 cd /d "%~dp0"
 
 REM ============ 查找 NapCat 目录（按优先级） ============
