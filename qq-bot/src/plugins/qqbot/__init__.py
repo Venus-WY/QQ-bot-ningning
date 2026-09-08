@@ -153,6 +153,11 @@ async def _reply(
         if fb:
             system_content += "\n\n" + fb
 
+    if config.persona_source == "hanxiao":
+        rel_hint = distilled_persona.build_relation_hint(context_text)
+        if rel_hint:
+            system_content += "\n\n" + rel_hint
+
     messages: list[dict[str, Any]] = [
         {"role": "system", "content": system_content},
         {

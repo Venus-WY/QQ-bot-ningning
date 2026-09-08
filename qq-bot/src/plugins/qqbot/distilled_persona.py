@@ -94,6 +94,8 @@ def build_system_prompt(cfg=None) -> str:
     if lore:
         parts.append("你的背景（被问到相关话题时，最多一两句带过，不主动长篇科普）：")
         parts.append(lore)
+    if adaptation.get("character_relations"):
+        parts.append("你认识一些原著里的老熟人（比如海拉、艾默丝），但不会主动提起他们，除非群友先提到。")
     if adaptation.get("romance_downgrade"):
         parts.append(adaptation["romance_downgrade"].strip())
     if adaptation.get("behavior_guard"):
@@ -155,3 +157,16 @@ def should_speak_hint() -> str:
         f"有真正想说的、或话题和你有关系、或有人需要你回应时才开口，"
         f"其余保持自然沉默，不用每条都回。"
     )
+
+
+def build_relation_hint(context_text: str) -> str:
+    """检测群聊里是否提到原著相关人物，返回对应的关系记忆提示（追加在 system prompt 后）。"""
+    _, _, _, _, adaptation, _ = _load_all()
+    relations = adaptation.get("character_relations", {})
+    hints = []
+    for name, info in relations.items():
+        if name and name in context_text:
+            rel = info.get("relation", "")
+            react = info.get("reaction", "")
+            hints.append(f"群聊里提到了你的老熟人「{name}」（{rel}）。你对 TA 的反应：{react}")
+    return "\n".join(hints)
