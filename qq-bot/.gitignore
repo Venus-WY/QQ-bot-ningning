@@ -1,5 +1,6 @@
 .env
 .env.prod
+config.yaml
 __pycache__/
 *.pyc
 .venv/
