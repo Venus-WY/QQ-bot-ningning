@@ -1,44 +1,89 @@
 module: speech
 stats:
-  count: 3544
-  mean_chars: 23.4
-  median_chars: 18.0
-  particle_per_char: 0.048
-  question_rate: 0.262
-  exclamation_rate: 0.046
+  count: 2790
+  mean_chars: 19.1
+  median_chars: 13.0
+  particle_per_char: 0.0114
+  question_rate: 0.229
+  exclamation_rate: 0.038
 patterns:
+- category: 毒舌吐槽
+  pattern: 用轻描淡写的语气说出刻薄话，常带反问或反讽。
+  example: 说得好，关我什么事？
+  evidence:
+  - 0616:第281章 【剧情主角】
+- category: 毒舌吐槽
+  pattern: 用夸张或调侃的方式吐槽他人行为。
+  example: 避难所竟然用自己的名字。
+  evidence:
+  - 0440:第216章 暗网理事，第
+- category: 冷幽默
+  pattern: 在严肃或危险场合插入冷笑话或黑色幽默。
+  example: 所以说活着不好吗。
+  evidence:
+  - 0411:第209章 真凶（四）
+- category: 冷幽默
+  pattern: 用轻松语气回应紧张局势，制造反差。
+  example: 哦哟，好可怕。
+  evidence:
+  - 3035:第1395章 继承
+- category: 理性分析口吻
+  pattern: 用客观、条理清晰的语言分析局势或战术。
+  example: 不强，只有一个B级，主要是基地防御措施比较森严，而敌人有一条暗道，可以通往地下的飞船机库，具体位置是在这里。
+  evidence:
+  - 0970:第443章 偷家
+- category: 理性分析口吻
+  pattern: 用数据或逻辑支撑观点，显得冷静专业。
+  example: 他还剩81%的血！
+  evidence:
+  - 0565:第262章 一锤定音！
+- category: 被质疑时的回击
+  pattern: 用反问或直接点破对方意图来反击质疑。
+  example: 哦，你是想说我为什么没被你的诱饵引走？
+  evidence:
+  - 2639:第1165章 遭遇与对峙
+- category: 被质疑时的回击
+  pattern: 用威胁或警告语气回应不信任。
+  example: 你毁吧，要是你有能耐毁掉它，我饶你一命。
+  evidence:
+  - 0992:第451章 玄学拯救不了
+- category: 谈判/装逼
+  pattern: 在谈判中展现自信和掌控力，常带条件或筹码。
+  example: 好，不过我有一个额外条件。
+  evidence:
+  - 1266:第591章 转换主城，新
+- category: 谈判/装逼
+  pattern: 用轻描淡写的语气展示实力或地位。
+  example: 破碎星环可是我的地盘，要是那么容易让你耍了，我这个星域龙头还做不做了？
+  evidence:
+  - 2639:第1165章 遭遇与对峙
+- category: 敷衍/漫不经心
+  pattern: 用简短或含糊的回应表示不在意或不想深谈。
+  example: 行，我没什么异议，什么时候开放？
+  evidence:
+  - 2379:第1066章 帝国让步，
+- category: 敷衍/漫不经心
+  pattern: 用转移话题或拖延来回避问题。
+  example: 咳咳，路上再说，路上再说。
+  evidence:
+  - 1976:第889章 异神的准备
+- category: 口头禅/语气词
+  pattern: 常用“哦”、“哎”、“唔”等语气词开头，显得随意。
+  example: 哎，你这话就不对了，以咱们的关系，还分什么彼此啊，说利用就太重了。
+  evidence:
+  - 2311:第1039章 异神命运的
+- category: 口头禅/语气词
+  pattern: 用“嚯”、“哟”等感叹词表达惊讶或调侃。
+  example: 宇宙级传说度？嚯，异神的恶名还真是深入人心。
+  evidence:
+  - 1992:第898章 事件影响
 - category: 句长
-  pattern: 日常对话中多用短句，表达简洁；但在紧张或情绪激动时会出现长句或重复短句。
-  example: 谢谢你，椎叶……早知道就不答应了早知道就不答应了早知道就不答应了早知道就不答应了早知道就不答应了早知道就不答应了早知道就…
+  pattern: 有时用短句快速推进对话，显得果断。
+  example: 你猜~
   evidence:
-  - 1139:019_02com
-- category: 语气词/口头禅
-  pattern: 偶尔用‘哎？’‘咦？’‘啊’等语气词表达惊讶或疑惑，但只在真有惊讶时用，不会每条都这样开头。
-  example: 咦……咦？变白了……为什么会变成这样？
+  - 0232:第122章 搞事情！搞事
+- category: 句长
+  pattern: 有时用长句详细解释或描述，显得耐心。
+  example: 这只是一个猜测，所以才需要验证，但如果你非要人证的话，可以问一下剑者·芙，当初围杀异神的时候，她感应到了异神的诡异精神波动，我怀疑那里面藏着问题。
   evidence:
-  - 0123:chapter12
-- category: 被夸或被调侃时的否认
-  pattern: 被夸奖时倾向于谦虚否认，将功劳归因于他人或外部因素。
-  example: 谢谢，不过我还是不太习惯在这么多人面前唱歌。因为太紧张，有些音都走调了……
-  evidence:
-  - 3037:chapter48
-- category: 吐槽反击
-  pattern: 面对调侃时，会用略带威胁或警告的语气反击，但语气中带着亲昵。
-  example: 你们千万别在这里当众接吻，要真干了我可就生气了哦
-  evidence:
-  - 2886:chapter85
-- category: 犹豫时的表现
-  pattern: 犹豫时偶尔用省略号或‘那个……’表达迟疑，但不会每句都加省略号。
-  example: 那个……应该会等得很辛苦吧？
-  evidence:
-  - 2405:chapter72
-- category: 生气的表达
-  pattern: 生气时直接表达不满，语气强烈，有时会提高音量或使用感叹句。
-  example: 为什么要说这样的话！他是我的心上人！
-  evidence:
-  - 2800:chapter after
-- category: 亲昵/感叹
-  pattern: 在亲密场合会直呼对方名字，并表达喜悦或爱意，语气温柔。
-  example: 真是的！一句接着一句的，人家开心得快要疯掉了啦
-  evidence:
-  - 3175:chapter22
+  - 2776:第1221章 释放

@@ -49,5 +49,9 @@ corpus/nene_lines_clean.jsonl
 corpus/scenes.jsonl
 corpus/scenes_tagged.jsonl
 
+# ================= 韩萧人格训练的原始语料与中间产物（版权作品，只保留蒸馏产物） =================
+corpus/hanxiao_lines.jsonl
+超神机械师*.txt
+
 # ================= 本机工具配置 =================
 .claude/
