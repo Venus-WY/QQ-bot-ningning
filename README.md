@@ -1,6 +1,6 @@
-# QQ 群「AI 群友」—— 绫地宁宁
+# QQ 群「AI 群友」—— 韩萧（黑星）
 
-一个**像群友一样参与聊天**的 QQ 机器人，而不是每条消息都回复的烦人机器人。人格是《魔女的夜宴》里的**绫地宁宁**，会主动插话、记得群友、有长期记忆和好感度，还会掷骰子、算运势、发美图。
+一个**像群友一样参与聊天**的 QQ 机器人，而不是每条消息都回复的烦人机器人。人格是《超神机械师》里的主角**韩萧**——冷静理性、毒舌吐槽、精于算计的机械师，会主动插话、记得群友、有长期记忆和好感度，还会掷骰子、算运势、发美图。
 
 ## 特性
 
@@ -8,6 +8,7 @@
 - **普通群聊** → 用便宜的大模型判断「该不该插话」，再按相关性概率决定是否开口（30 秒冷却，不刷屏）
 - **长期记忆** → 记住每个群友说过的事，关系/好感度逐步变化
 - **人格可配置** → 改 `config.yaml` 即可换人设、语气、话痨程度
+- **原著背景 + 人物关系** → 问起韩萧的来历会回应；群聊提到海拉、异神等原著人物时，韩萧有对应情绪反应
 - **功能插件** → 骰子 / 今日运势 / 今日老婆（触发词见下文）
 - **热重载** → 开发期改代码自动重启，改完即生效
 
@@ -28,13 +29,16 @@ QQ群 → NapCatQQ →(反向 WebSocket)→ NoneBot2 → 插件逻辑 → DeepSe
 ├── qq-bot/               # Python 项目（NoneBot2），核心代码在这
 │   ├── bot.py            # 启动入口
 │   ├── run_reload.py     # 热重载启动（开发用）
-│   ├── config.yaml       # 配置：群号 / 人格 / 记忆
+│   ├── config.example.yaml  # 配置模板（群号 / 人格 / 记忆），复制成 config.yaml 填值
 │   ├── .env.example      # 环境变量模板（复制成 .env 填 key）
-│   └── src/plugins/      # 插件：qqbot / fortune / waifu / dice
-├── corpus/               # 人格蒸馏产物（persona/fewshot/eval）
+│   ├── src/plugins/      # 插件：qqbot / fortune / waifu / dice
+│   ├── scripts/          # 人格蒸馏流水线（提取/蒸馏/few-shot 脚本）
+│   └── docs/             # 插件开发指南、知识库扩展指南
+├── corpus/               # 人格蒸馏产物（persona/*.yaml、fewshot.jsonl）
 ├── 素材/                 # 图片池（角色图，文件名即角色名）
 ├── scripts/              # 数据分析小工具（与本机数据打分相关，可忽略）
-└── 一键启动.bat           # 一键拉起 NapCat + bot（Windows）
+├── 一键启动.bat           # 一键拉起 NapCat + bot（Windows，自动查找 NapCat 目录）
+└── README.md
 ```
 
 ## 快速开始
@@ -48,8 +52,8 @@ QQ群 → NapCatQQ →(反向 WebSocket)→ NoneBot2 → 插件逻辑 → DeepSe
 ### 1. 克隆仓库
 
 ```bash
-git clone https://github.com/你的用户名/QQ-bot-ningning-.git
-cd QQ-bot-ningning-/qq-bot
+git clone https://github.com/你的用户名/QQ-bot-ningning.git
+cd QQ-bot-ningning/qq-bot
 ```
 
 ### 2. 安装依赖
@@ -73,8 +77,9 @@ pip install -r requirements.txt
 ```bash
 # Windows
 copy .env.example .env
+copy config.example.yaml config.yaml
 # Linux / macOS
-# cp .env.example .env
+# cp .env.example .env && cp config.example.yaml config.yaml
 ```
 
 打开 `.env`，填入：
@@ -91,6 +96,7 @@ groups:
 ```
 
 > `config.yaml` 里所有字段都有中文注释，人格、记忆、话痨程度都能在这里调。
+> 该文件已被 `.gitignore` 忽略（含群号等本地配置，不会误提交到仓库）。
 
 ### 4. 启动 bot
 
@@ -109,9 +115,10 @@ python bot.py
 
 NapCatQQ 负责把你的 QQ 小号接到 OneBot 协议。
 
-1. **下载**：https://github.com/NapNeko/NapCatQQ/releases ，推荐 **NapCat.Shell**（Windows 一键包，自带 QQNT）。
-2. **登录小号**：运行 NapCat.Shell → 用手机 QQ 扫码登录你的小号。
-3. **配置反向 WebSocket**：登录后打开 Web 控制台（默认 http://127.0.0.1:6099/webui ），在「网络配置 / Network」里新增一条**反向 WebSocket**，地址填：
+1. **下载**：https://github.com/NapNeko/NapCatQQ/releases ，下载 **NapCat.Shell.zip** 并解压（推荐解压到项目同级目录，如 `..\napcat-shell\`，或项目内 `napcat\` 子目录）。
+2. **安装 QQ**：安装与 NapCat 版本匹配的 QQ NT（参考 NapCat 发布说明里推荐的 QQ 版本）。
+3. **登录小号**：运行 NapCat 目录下的 `launcher.bat`（管理员）或 `launcher-user.bat`（免管理员）→ 用手机 QQ 扫码登录你的小号。
+4. **配置反向 WebSocket**：登录后打开 Web 控制台（默认 http://127.0.0.1:6099/webui ），在「网络配置 / Network」里新建一条 **WebSocket 客户端**，URL 填：
 
    ```
    ws://127.0.0.1:8080/onebot/v11/ws
@@ -119,9 +126,9 @@ NapCatQQ 负责把你的 QQ 小号接到 OneBot 协议。
 
    保存后重启 NapCat（或重新连接）。
 
-   > 不同版本界面文案略有差异（「WebSocket 反向」「reverse websocket」等），含义一致。
+   > 反向 WebSocket 里 NapCat 是「客户端」，NoneBot 是「服务器」，所以选 **WebSocket 客户端**。
 
-4. **验证连接**：回到 `python bot.py` 的终端，会多出类似日志：
+5. **验证连接**：回到 `python bot.py` 的终端，会多出类似日志：
 
    ```
    [INFO] nonebot | Bot xxxxxxx@onebot 已连接
@@ -131,13 +138,19 @@ NapCatQQ 负责把你的 QQ 小号接到 OneBot 协议。
 
    > `/echo` 是 NoneBot 自带的调试插件，测试完可在 `pyproject.toml` 里删掉 `builtin_plugins = ["echo"]`。
 
+### 6. 一键启动（可选）
+
+Windows 下配好环境后，双击项目根目录的 `一键启动.bat`，会自动拉起 NapCat + bot。
+脚本会按顺序自动查找 NapCat 目录（`napcat\` → 上级 `napcat-shell\` → 上级 `napcat\`），
+找不到时会给出提示。
+
 ## 功能插件
 
 | 功能 | 触发方式 | 效果 |
 | --- | --- | --- |
 | 骰子 | `r1d6`、`r2d8+1`、`r4d6kh3` | 掷骰子并回结果 |
-| 今日运势 | `/运势` 或消息含「今日运势」 | 当天固定运势 + 一张角色图 + 宁宁点评 |
-| 今日老婆 | `/老婆` 或消息含「今日老婆」「来点美图」 | 随机角色图 + 角色名 + 宁宁点评 |
+| 今日运势 | `/运势` 或消息含「今日运势」 | 当天固定运势 + 一张角色图 + 韩萧点评 |
+| 今日老婆 | `/老婆` 或消息含「今日老婆」「来点美图」 | 随机角色图 + 角色名 + 韩萧点评 |
 
 > 图库在项目根目录的 `素材/`，**图片名即角色名**；往里塞新图，下一次触发就直接能用，无需重启。
 
@@ -151,6 +164,16 @@ NapCatQQ 负责把你的 QQ 小号接到 OneBot 协议。
 | 更安静 | 调大 `min_reply_interval` |
 | 换名字/人设 | `persona.identity.name` / `role` / `style` |
 | 回复更长/更短 | `persona.speech.max_length` |
+| 调毒舌度/理性程度 | `persona.personality.sarcasm` / `seriousness` |
+
+**韩萧的背景记忆与人物关系**在 `corpus/persona/qq_adaptation.yaml`：
+- `lore_background`：韩萧的来历（被问起时回答）
+- `character_relations`：海拉、艾默丝、异神等人的关系与「群聊提到时的反应」，加条目即生效，无需改代码
+
+## 扩展知识库 / 蒸馏新人格
+
+想给韩萧加背景知识、加人物关系，或想蒸馏一个全新角色（换人设），
+见 [`qq-bot/docs/知识库与人格扩展指南.md`](qq-bot/docs/知识库与人格扩展指南.md)。
 
 ## 常见问题
 
@@ -158,13 +181,16 @@ NapCatQQ 负责把你的 QQ 小号接到 OneBot 协议。
 A：个别库还没完全适配 3.14。删掉 `.venv` 用 Python 3.11/3.12 重建：`py -3.12 -m venv .venv`。
 
 **Q：NapCat 连不上，bot 日志没有「已连接」**
-A：确认 bot 已启动且监听 8080；确认 NapCat 填的是 `ws://127.0.0.1:8080/onebot/v11/ws`（`/onebot/v11/ws` 路径不能漏）。
+A：确认 bot 已启动且监听 8080；确认 NapCat 填的是 `ws://127.0.0.1:8080/onebot/v11/ws`（`/onebot/v11/ws` 路径不能漏），且选的是「WebSocket 客户端」。
+
+**Q：NapCat 不弹二维码 / 启动失败**
+A：多半是 QQ 版本与 NapCat 不匹配。看 NapCat 发布说明里推荐的 QQ 版本，安装对应版本再试；同时关闭 QQ 自动更新。
 
 **Q：@机器人没反应**
 A：① `config.yaml` 的 `groups` 是否含该群号；② `.env` 的 key 是否填对；③ 看终端有没有 `调用大模型失败` 的报错。
 
 **Q：机器人从不主动说话**
-A：`should_speak` 里相关性低就会沉默，这是预期行为。可以临时在群里聊它熟悉的话题，或调低概率门阈值。
+A：`should_speak` 里相关性低就会沉默，这是预期行为。可以临时在群里聊它熟悉的话题（机械、游戏、科幻），或调低概率门阈值。
 
 ## 免责声明
 
