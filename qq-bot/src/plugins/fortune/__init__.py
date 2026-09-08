@@ -1,4 +1,4 @@
-"""今日运势插件：同人同天结果固定，发二次元图片 + 运势 + 宁宁点评。
+"""今日运势插件：同人同天结果固定，发二次元图片 + 运势 + 韩萧点评。
 
 触发：`/运势` 或消息含「今日运势」。
 确定性：用 random.Random(f"{user_id}-{date}") 做种子（不用 hash()，跨重启稳定）。
@@ -38,13 +38,13 @@ async def _reply(bot: Bot, event: GroupMessageEvent) -> None:
         msg += MessageSegment.image(file=img.path.read_bytes())
     msg += f"【{nickname}】今日运势：{fortune['level']}（{fortune['score']}分）\n{fortune['text']}"
 
-    # 宁宁点评（可选，失败不阻塞发图）
+    # 韩萧点评（可选，失败不阻塞发图）
     try:
         comment = await chat(
             [
                 {
                     "role": "system",
-                    "content": "你是 QQ 群里的宁宁，说话简短可爱、带点害羞。"
+                    "content": "你是 QQ 群里的韩萧，冷静理性、带点毒舌，说话简短。"
                     "不要堆砌语气词，不要每句都加省略号。",
                 },
                 {
@@ -56,7 +56,7 @@ async def _reply(bot: Bot, event: GroupMessageEvent) -> None:
             max_tokens=60,
         )
         if comment:
-            msg += f"\n宁宁：{comment}"
+            msg += f"\n韩萧：{comment}"
     except Exception as exc:
         logger.warning(f"[运势] 点评生成失败：{exc}")
 

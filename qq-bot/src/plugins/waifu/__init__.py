@@ -1,4 +1,4 @@
-"""今日老婆插件：随机抽一张二次元图 + 角色名 + 宁宁点评。
+"""今日老婆插件：随机抽一张二次元图 + 角色名 + 韩萧点评。
 
 与 fortune（今日运势）的区别：**不锁日期**，每次触发都重新随机，可能抽到不同结果。
 图库复用 _shared/image_pool（图片名即角色名），新增图即时生效（_scan 每次现扫目录，无缓存）。
@@ -34,13 +34,13 @@ async def _reply(bot: Bot, event: GroupMessageEvent) -> None:
     msg += MessageSegment.image(file=img.path.read_bytes())
     msg += f"【{nickname}】今天的缘分是：{img.character}"
 
-    # 宁宁点评（可选，失败不阻塞发图）
+    # 韩萧点评（可选，失败不阻塞发图）
     try:
         comment = await chat(
             [
                 {
                     "role": "system",
-                    "content": "你是 QQ 群里的宁宁，说话简短可爱、带点害羞。"
+                    "content": "你是 QQ 群里的韩萧，冷静理性、带点毒舌，说话简短。"
                     "不要堆砌语气词，不要每句都加省略号。",
                 },
                 {
@@ -52,7 +52,7 @@ async def _reply(bot: Bot, event: GroupMessageEvent) -> None:
             max_tokens=60,
         )
         if comment:
-            msg += f"\n宁宁：{comment}"
+            msg += f"\n韩萧：{comment}"
     except Exception as exc:
         logger.warning(f"[今日老婆] 点评生成失败：{exc}")
 

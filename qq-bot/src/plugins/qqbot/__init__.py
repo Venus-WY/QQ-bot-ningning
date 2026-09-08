@@ -16,7 +16,7 @@ from .llm import chat
 from .persona import build_system_prompt
 from .planner import should_bubble, should_speak
 from . import memory
-from . import nene_persona
+from . import distilled_persona
 
 # 每个群最近一次「主动发言」的时间戳（@可绕过冷却）
 _last_reply: dict[int, float] = {}
@@ -137,9 +137,9 @@ async def _reply(
 ) -> None:
     context_text = format_recent(event.group_id)
 
-    # 核心人格（只读；nene=蒸馏人格 / luna=旧占位）+ 记忆 + few-shot
-    if config.persona_source == "nene":
-        system_content = nene_persona.build_system_prompt(config)
+    # 核心人格（只读；hanxiao=蒸馏人格 / luna=旧占位）+ 记忆 + few-shot
+    if config.persona_source == "hanxiao":
+        system_content = distilled_persona.build_system_prompt(config)
     else:
         system_content = build_system_prompt(config)
 
@@ -148,8 +148,8 @@ async def _reply(
         if block:
             system_content += "\n\n" + block
 
-    if config.persona_source == "nene":
-        fb = nene_persona.build_fewshot_block(context_text)
+    if config.persona_source == "hanxiao":
+        fb = distilled_persona.build_fewshot_block(context_text)
         if fb:
             system_content += "\n\n" + fb
 

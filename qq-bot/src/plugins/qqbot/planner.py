@@ -5,12 +5,12 @@ from .llm import judge
 
 
 def _persona_hint() -> str:
-    """宁宁插话倾向提示（未启用 nene 人格时为空）。"""
+    """蒸馏人格的插话倾向提示（未启用蒸馏人格时为空）。"""
     try:
         from .config import config as _cfg
-        if _cfg.persona_source == "nene":
-            from . import nene_persona
-            return nene_persona.should_speak_hint() + "\n"
+        if _cfg.persona_source == "hanxiao":
+            from . import distilled_persona
+            return distilled_persona.should_speak_hint() + "\n"
     except Exception:
         pass
     return ""
