@@ -54,6 +54,6 @@ def search_knowledge(text: str, max_hits: int = 6) -> str:
 
     parts = "、".join(f"「{name}」（{cat}：{desc}）" for cat, name, desc in unique)
     return (
-        f"群聊里提到了你所在世界观的概念：{parts}。"
-        f"你对这些很熟悉，可以自然地接着聊，别表现得像没听说过。"
+        f"群聊里提到了概念：{parts}。"
+        f"你对这些很熟悉，可以适当多提一点这个概念的内容，自然地接着聊，别表现得像没听说过。"
     )
