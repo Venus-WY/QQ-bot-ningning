@@ -10,7 +10,7 @@ import random
 import re
 from dataclasses import dataclass
 
-MAX_DICE = 10000      # 单组骰子颗数上限
+MAX_DICE = 1000      # 单组骰子颗数上限
 MAX_SIDES = 100    # 面数上限
 MAX_TERMS = 10      # 单条表达式组数上限
 
