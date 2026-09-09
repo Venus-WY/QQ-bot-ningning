@@ -17,6 +17,7 @@ from .persona import build_system_prompt
 from .planner import should_bubble, should_speak
 from . import memory
 from . import distilled_persona
+from . import knowledge
 
 # 每个群最近一次「主动发言」的时间戳（@可绕过冷却）
 _last_reply: dict[int, float] = {}
@@ -157,6 +158,10 @@ async def _reply(
         rel_hint = distilled_persona.build_relation_hint(context_text)
         if rel_hint:
             system_content += "\n\n" + rel_hint
+
+    kb_hint = knowledge.search_knowledge(context_text)
+    if kb_hint:
+        system_content += "\n\n" + kb_hint
 
     messages: list[dict[str, Any]] = [
         {"role": "system", "content": system_content},
