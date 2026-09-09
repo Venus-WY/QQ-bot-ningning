@@ -15,7 +15,8 @@ KNOWLEDGE_PATH = PROJECT_ROOT.parent / "corpus" / "knowledge.yaml"
 
 
 @lru_cache(maxsize=1)
-def load_knowledge() -> dict[str, list[str]]:
+def load_knowledge() -> dict[str, dict[str, str]]:
+    """加载知识库，返回 {分类: {名词: 一句话描述}}。"""
     with open(KNOWLEDGE_PATH, encoding="utf-8") as f:
         return yaml.safe_load(f) or {}
 
@@ -26,30 +27,32 @@ def search_knowledge(text: str, max_hits: int = 6) -> str:
     if not text or not knowledge:
         return ""
 
-    hits: list[tuple[str, str]] = []
+    hits: list[tuple[str, str, str]] = []  # (分类, 名词, 描述)
     # 先收集所有命中，再按名词长度降序（长词更具体，优先保留）
-    for category, names in knowledge.items():
-        for name in names:
+    for category, items in knowledge.items():
+        if not isinstance(items, dict):
+            continue
+        for name, desc in items.items():
             if len(name) >= 2 and name in text:
-                hits.append((category, name))
+                hits.append((category, name, desc))
 
     if not hits:
         return ""
 
     # 去重（同一词可能归到多类）+ 按长度降序，长词命中后跳过其子串
     seen: set[str] = set()
-    unique: list[tuple[str, str]] = []
-    for cat, name in sorted(hits, key=lambda x: -len(x[1])):
+    unique: list[tuple[str, str, str]] = []
+    for cat, name, desc in sorted(hits, key=lambda x: -len(x[1])):
         if name in seen:
             continue
         # 若该词是已命中长词的子串，跳过（避免「海蓝星」命中后又冒出「蓝星」「海蓝」）
-        if any(name in longer for _, longer in unique):
+        if any(name in longer for _, longer, _ in unique):
             continue
         seen.add(name)
-        unique.append((cat, name))
+        unique.append((cat, name, desc))
     unique = unique[:max_hits]
 
-    parts = "、".join(f"「{name}」（{cat}）" for cat, name in unique)
+    parts = "、".join(f"「{name}」（{cat}：{desc}）" for cat, name, desc in unique)
     return (
         f"群聊里提到了你所在世界观的概念：{parts}。"
         f"你对这些很熟悉，可以自然地接着聊，别表现得像没听说过。"
