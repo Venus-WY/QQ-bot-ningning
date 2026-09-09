@@ -167,7 +167,12 @@ async def _reply(
         {"role": "system", "content": system_content},
         {
             "role": "user",
-            "content": f"以下是 QQ 群最近聊天：\n\n{context_text}\n\n请以群成员身份自然地回复一句。",
+            "content": (
+                f"以下是 QQ 群最近聊天（按时间先后，可能包含多个话题）：\n\n{context_text}\n\n"
+                "请注意：群聊话题会随时转移，最后几条消息反映的才是当前话题。"
+                "请围绕当前（最新）话题回复，不要继续纠缠更早的、已经结束的话题。"
+                "请以群成员身份自然地回复一句。"
+            ),
         },
     ]
 

@@ -42,10 +42,19 @@ def add_message(group_id: int, nickname: str, user_id: int, text: str) -> None:
     )
 
 
+# 两条相邻消息间隔超过此秒数，视为话题可能已切换（在上下文里插入分界标记）
+TOPIC_GAP_SECONDS = 300
+
+
 def format_recent(group_id: int, n: int | None = None) -> str:
     msgs = get_context(group_id).recent(n or config.context_len)
-    lines = [
-        f"[{time.strftime('%H:%M', time.localtime(m.ts))}] {m.nickname}：{m.text}"
-        for m in msgs
-    ]
+    lines: list[str] = []
+    prev_ts: float | None = None
+    for m in msgs:
+        if prev_ts is not None and m.ts - prev_ts > TOPIC_GAP_SECONDS:
+            lines.append("── 话题可能已切换 ──")
+        lines.append(
+            f"[{time.strftime('%H:%M', time.localtime(m.ts))}] {m.nickname}：{m.text}"
+        )
+        prev_ts = m.ts
     return "\n".join(lines)
