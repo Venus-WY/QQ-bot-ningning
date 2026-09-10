@@ -16,9 +16,16 @@ def _persona_hint() -> str:
     return ""
 
 
-async def should_speak(context_text: str) -> tuple[bool, float, str]:
+async def should_speak(context_text: str, in_conversation: bool = False) -> tuple[bool, float, str]:
     """返回 (是否回复, 相关性, 理由)。"""
-    system = _persona_hint() + (
+    conv_note = (
+        "注意：你刚刚回复过群友，现在群友很可能在继续追问你、接续你刚才的话题。"
+        "这种情况下要优先回应，别让人家的追问落空——只要和你说过的话相关，就积极接话，"
+        "不要因为话题没点名你就装没看见。\n"
+        if in_conversation
+        else ""
+    )
+    system = _persona_hint() + conv_note + (
         "你是一个 QQ 群成员。根据最近聊天内容判断你是否应该加入对话。\n"
         "注意：群聊话题会转移，最后几条消息反映的才是当前话题；"
         "判断是否插话时，只以当前（最新）话题为准，不要因为早先已经结束的话题而插话。\n"

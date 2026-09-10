@@ -40,6 +40,8 @@ def _is_tech_question(text: str) -> bool:
 _last_reply: dict[int, float] = {}
 # 主动冒泡（持续话题插话）的独立冷却：比普通插话长，避免频繁刷存在感
 _last_bubble: dict[int, float] = {}
+# 对话接续窗口：bot 回复后这么长时间内，群友的追问视为「接续对话」，放宽冷却、提高接话欲望
+CONVERSATION_WINDOW = 180  # 秒
 
 group_chat = on_message(priority=10, block=False)
 
@@ -86,14 +88,19 @@ async def handle(bot: Bot, event: MessageEvent) -> None:
     if not text:
         return
 
-    # 冷却：刚主动说过话就先歇着
+    # 冷却：刚主动说过话就先歇着（但对话接续窗口内放宽，便于多轮追问）
     last = _last_reply.get(event.group_id, 0.0)
-    if time.time() - last < config.min_reply_interval:
+    elapsed = time.time() - last
+    in_conversation = elapsed < CONVERSATION_WINDOW
+    if elapsed < config.min_reply_interval and not in_conversation:
+        return
+    if elapsed < 3:
+        # 3 秒内的极短冷却，防止连发刷屏
         return
 
-    # 主动插话决策
+    # 主动插话决策（对话接续时提高回复欲望）
     context_text = format_recent(event.group_id, config.judge_context_len)
-    speak, relevance, reason = await should_speak(context_text)
+    speak, relevance, reason = await should_speak(context_text, in_conversation=in_conversation)
     logger.info(
         f"[群{event.group_id}] 插话决策 speak={speak} relevance={relevance:.2f} reason={reason}"
     )
