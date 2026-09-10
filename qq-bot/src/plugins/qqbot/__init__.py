@@ -19,6 +19,23 @@ from . import memory
 from . import distilled_persona
 from . import knowledge
 
+# 专业领域关键词：命中即视为「专业问题」，回复放宽字数上限并追求详细准确
+TECH_KEYWORDS = (
+    "计算机", "编程", "代码", "算法", "数据结构", "操作系统", "编译", "网络协议",
+    "数据库", "分布式", "并发", "线程", "进程", "内存", "缓存", "Python", "C++",
+    "Java", "Linux", "控制", "PID", "反馈", "伺服", "电机", "自动化", "PLC",
+    "传感器", "信号", "滤波", "卡尔曼", "软件工程", "架构", "设计模式", "重构",
+    "测试", "微服务", "接口", "集成电路", "芯片", "FPGA", "Verilog", "VHDL",
+    "版图", "半导体", "晶圆", "电路", "时序", "功耗", "寄存器", "总线", "机器视觉",
+    "机械臂", "机器人", "机械设计", "机械结构", "动力学", "运动学", "嵌入式", "单片机",
+    "复杂度", "排序", "搜索", "递归", "哈希", "二叉树", "图论", "动态规划", "贪心",
+)
+
+
+def _is_tech_question(text: str) -> bool:
+    """判断群里最近聊天是否涉及专业领域技术问题。"""
+    return any(k in text for k in TECH_KEYWORDS)
+
 # 每个群最近一次「主动发言」的时间戳（@可绕过冷却）
 _last_reply: dict[int, float] = {}
 # 主动冒泡（持续话题插话）的独立冷却：比普通插话长，避免频繁刷存在感
@@ -163,6 +180,14 @@ async def _reply(
     if kb_hint:
         system_content += "\n\n" + kb_hint
 
+    is_tech = _is_tech_question(context_text)
+    tech_note = (
+        "这是一个专业领域的技术问题，请给出详细、精准、准确无误的说明，"
+        "可以分点或分步骤展开，不要简短敷衍。"
+        if is_tech
+        else ""
+    )
+
     messages: list[dict[str, Any]] = [
         {"role": "system", "content": system_content},
         {
@@ -171,13 +196,16 @@ async def _reply(
                 f"以下是 QQ 群最近聊天（按时间先后，可能包含多个话题）：\n\n{context_text}\n\n"
                 "请注意：群聊话题会随时转移，最后几条消息反映的才是当前话题。"
                 "请围绕当前（最新）话题回复，不要继续纠缠更早的、已经结束的话题。"
-                "请以群成员身份自然地回复一句。"
+                + (f"\n{tech_note}" if tech_note else "")
+                + "\n请以群成员身份自然地回复。"
             ),
         },
     ]
 
+    # 专业问题放宽回复长度（给足 token 空间输出详细说明）
+    max_tokens = 800 if is_tech else 256
     try:
-        reply = await chat(messages)
+        reply = await chat(messages, max_tokens=max_tokens)
     except Exception as exc:
         logger.error(f"调用大模型失败：{exc}")
         return
