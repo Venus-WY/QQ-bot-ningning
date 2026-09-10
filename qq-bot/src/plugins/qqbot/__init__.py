@@ -187,7 +187,8 @@ async def _reply(
     if kb_hint:
         system_content += "\n\n" + kb_hint
 
-    is_tech = _is_tech_question(context_text)
+    # 只有被 @ 或点名时才触发专业问题的详细回答；主动插话时即使技术问题也简短回复
+    is_tech = trigger in ("mention", "named") and _is_tech_question(context_text)
     tech_note = (
         "这是一个专业领域的技术问题，请给出详细、精准、准确无误的说明，"
         "可以分点或分步骤展开，不要简短敷衍。"
